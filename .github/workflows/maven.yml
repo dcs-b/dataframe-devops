@@ -28,4 +28,10 @@ jobs:
         cache: maven
     - name: Build and test with Maven
       run: mvn -B verify --file pom.xml
+      
+    - name: Upload Jacoco report
+      uses: actions/upload-artifact@v2
+      with:
+        name: Jacoco report
+        path: target/site/jacoco
 
