@@ -38,20 +38,21 @@ jobs:
 
     - name: Upload coverage report as artifact
       uses: actions/upload-artifact@v3
+      if: success() || failure()
       with:
         name: coverage_report
         path: target/site/jacoco/
 
     - name: Publish coverage report to GitHub Pages (main branch)
       uses: JamesIves/github-pages-deploy-action@v4
-      if: github.ref == 'refs/heads/main'
+      if: github.ref == 'refs/heads/main' && (success() || failure())
       with:
         folder: target/site/jacoco
         target-folder: main
 
     - name: Publish coverage report to GitHub Pages (develop branch)
       uses: JamesIves/github-pages-deploy-action@v4
-      if: github.ref == 'refs/heads/develop'
+      if: github.ref == 'refs/heads/develop' && (success() || failure())
       with:
         folder: target/site/jacoco
         target-folder: develop
