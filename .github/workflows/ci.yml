@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  push:
+    branches: [ "main", "develop" ]
+  pull_request:
+    branches: [ "main", "develop" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v2
+      with:
+          java-version: 17
+          distribution: 'temurin'
+          cache: maven
+
+    - name: Build and test with Maven
+      run: mvn verify
+
+    - name: Publish test report
+      uses: mikepenz/action-junit-report@v3
+      if: success() || failure()
+      with:
+        detailed_summary: false
+        report_paths: '**/target/surefire-reports/TEST-*.xml'
+
+    - name: Publish coverage report
+      uses: ./.github/actions/coverage-report
+      if: success() || failure()
+      with:
+        min_coverage: 0
+
+    - name: Upload coverage report as artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: coverage_report
+        path: target/site/jacoco/
+
+    - name: Publish coverage report to GitHub Pages (main branch)
+      uses: JamesIves/github-pages-deploy-action@v4
+      if: github.ref == 'refs/heads/main'
+      with:
+        folder: target/site/jacoco
+        target-folder: main
+
+    - name: Publish coverage report to GitHub Pages (develop branch)
+      uses: JamesIves/github-pages-deploy-action@v4
+      if: github.ref == 'refs/heads/develop'
+      with:
+        folder: target/site/jacoco
+        target-folder: develop
