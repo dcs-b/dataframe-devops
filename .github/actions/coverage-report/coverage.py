@@ -39,7 +39,7 @@ print("|")
 
 print("| Coverage", end=" ")
 for e in res:
-    e["percentage"] = e["covered"] / e["total"] * 100
+    e["percentage"] = 0 if e["total"] == 0 else e["covered"] / e["total"] * 100
     print("|", round(e["percentage"], 2), "%" ,end=" ")
 print("|")
 
