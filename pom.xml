@@ -87,5 +87,18 @@
             </plugin>
         </plugins>
     </build>
+    <profiles>
+    <profile>
+      <id>github</id>
+      <distributionManagement>
+        <repository>
+          <id>github</id>
+          <name>GitHub Packages</name>
+          <url>https://maven.pkg.github.com/dcs-b/devops-dataframe/</url>
+        </repository>
+      </distributionManagement>
+    </profile>
+  </profiles>
+
 
 </project>
