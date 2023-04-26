@@ -31,3 +31,4 @@ runs:
       run: |
         echo '### JaCoCo Coverage Report' >> $GITHUB_STEP_SUMMARY
         echo "${{ env.OUTPUT }}" >> $GITHUB_STEP_SUMMARY
+        echo "${{ env.OUTPUT }}" > coverage-report.md
