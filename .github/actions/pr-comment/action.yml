@@ -2,18 +2,18 @@ name: 'pr-comment'
 description: 'Publishes badges and coverage as a PR comment'
 
 inputs:
-  path:
-    description: 'Path to the coverage report md file'
+  md_path:
+    description: 'Path to the coverage report markdown file'
     required: false
-    default: 'coverage-report.md'
+    default: 'target/site/jacoco/coverage-report.md'
 
 runs:
   using: "composite"
   steps:
     - name: generate pr_comment.md
       run: |
-        echo "![CI](https://github.com/dcs-b/dataframe-devops/actions/workflows/ci.yml/badge.svg)" > pr_comment.md
-        cat coverage-report.md >> pr_comment.md
+        echo "![build](https://img.shields.io/github/actions/workflow/status/dcs-b/dataframe-devops/ci.yml?branch=develop&style?style=flat&logo=github)" > pr_comment.md
+        cat ${{ inputs.md_path }} >> pr_comment.md
       shell: bash
 
     - name: Add PR comment
