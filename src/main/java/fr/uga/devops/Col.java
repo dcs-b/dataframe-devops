@@ -87,6 +87,10 @@ public class Col { //public methods : read_array, get_type
         return this.label;
     }
 
+    public int getSize(){
+        return this.elems.size();
+    }
+
 
     // in these methods we cast Objects doubles. this cast is safe because we check the dataType beforehand and
     // double is stored on 64bits, so no loss of precision takes place.
