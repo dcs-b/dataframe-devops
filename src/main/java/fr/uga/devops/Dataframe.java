@@ -11,9 +11,10 @@ public class Dataframe {
     private ArrayList<Col> cols;
 
 
-    public Dataframe(File f) { //if we want our dataframe from a csv file
+    public Dataframe(String filename) { //if we want our dataframe from a csv file
         this.cols = new ArrayList<>();
-        if(isCSVFile(f)){
+        File f = new File(filename);
+        if(isCSVFile(filename)){
             readCsv(f);
         }else {
             throw new RuntimeException("invalid file provided.");
@@ -24,8 +25,7 @@ public class Dataframe {
         this.cols = new ArrayList<>();
     }
 
-    public boolean isCSVFile(File file) { //checks if the provided file is a .csv // returns boolean
-        String fileName = file.getName();
+    private boolean isCSVFile(String fileName) { //checks if the provided file is a .csv // returns boolean
         String extension = "";
 
         int i = fileName.lastIndexOf('.');
@@ -36,7 +36,7 @@ public class Dataframe {
         return extension.equalsIgnoreCase("csv");
     }
 
-    public void readCsv(File f){
+    private void readCsv(File f){
         boolean first;
         String label = "";
         try (CSVReader reader = new CSVReader(new FileReader(f))) {
@@ -64,17 +64,19 @@ public class Dataframe {
     private void print(int start, int end) {
         int index = start;
         for (Col col : this.cols) {
-            System.out.printf("%-30s", col.getLabel());
+            System.out.printf("%-15s", col.getLabel());
         }
+        System.out.printf("\n");
         while(index <= end){
             for (Col col : this.cols) {
                 if (index < col.getSize()) {
-                    System.out.printf("%-30s", col.getElem(index));
+                    System.out.printf("%-15s", col.getElem(index));
                 } else {
-                    System.out.printf("%-30s", " ");
+                    System.out.printf("%-15s", " ");
                 }
             }
-        index += 1;
+            index += 1;
+            System.out.printf("\n");
         }
     }
 
@@ -132,7 +134,9 @@ public class Dataframe {
             ArrayList<Object> data = new ArrayList<>();
             String label = col.getLabel();
             for(Integer i: indexes){
+                if(i < col.getSize()){
                 data.add(col.getElem(i));
+                }
             }
             df.addColumn(label, data);
         }
@@ -142,15 +146,18 @@ public class Dataframe {
 
     //user must provide an arraylist containing
     //the indexes of the columns they want to extract
+
     public Dataframe extractColumns(ArrayList<Integer> indexes){
         Dataframe df = new Dataframe();
         for(Integer i : indexes){
-            df.duplicateCol(this.getColumn(i));
+            if(i < this.cols.size()) {
+                df.duplicateCol(this.getColumn(i));
+            }
         }
         return df;
     }
 
-    private Col getColumn(int index){
+    public Col getColumn(int index){
         return cols.get(index);
     }
 
@@ -158,10 +165,9 @@ public class Dataframe {
         this.cols.add(col);
     }
 
-
-    public static int main(String[] args){
-        String csvFile = "TODO";
-
-        return 0;
+    public int getSize(){
+        return this.cols.size();
     }
+
 }
+
