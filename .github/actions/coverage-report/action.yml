@@ -2,7 +2,7 @@ name: 'coverage-report'
 description: 'Publish a coverage report summary'
 
 inputs:
-  path:
+  csv_path:
     description: 'Path to the report csv file'
     required: false
     default: 'target/site/jacoco/jacoco.csv'
@@ -10,14 +10,22 @@ inputs:
     description: 'Minimum coverage percentage required to pass the test'
     required: false
     default: '0'
+  md_output:
+    description: 'Path to the markdown file to generate'
+    required: false
+    default: 'target/site/jacoco/coverage-report.md'
+  json_output:
+    description: 'Path to the json file to generate'
+    required: false
+    default: 'target/site/jacoco/coverage-report.json'
 
 runs:
   using: "composite"
   steps:
-    - name: parse coverage report
+    - name: parse coverage report and generate json file
       shell: bash
       run: |
-        output=$(python .github/actions/coverage-report/coverage.py ${{ inputs.path }} ${{ inputs.min_coverage }})
+        output=$(python .github/actions/coverage-report/coverage.py ${{ inputs.csv_path }} ${{ inputs.min_coverage }} ${{ inputs.json_output }})
         OUTPUT=$(cat << EOF
         $output
         EOF
@@ -26,9 +34,9 @@ runs:
         echo "$OUTPUT" >> $GITHUB_ENV
         echo "EOF" >> $GITHUB_ENV
 
-    - name: print table with parsed report
+    - name: print table with parsed report and generate md file
       shell: bash
       run: |
         echo '### JaCoCo Coverage Report' >> $GITHUB_STEP_SUMMARY
         echo "${{ env.OUTPUT }}" >> $GITHUB_STEP_SUMMARY
-        echo "${{ env.OUTPUT }}" > coverage-report.md
+        echo "${{ env.OUTPUT }}" > ${{ inputs.md_output }}
