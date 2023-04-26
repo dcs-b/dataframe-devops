@@ -20,12 +20,15 @@ f.readline()
 
 for line in f:
     arr = line.split(',')
+    length = len(arr)
+    j = 0
 
-    for i in range(5):
-        a = int(arr[i+3])
-        b = int(arr[i+4])
-        res[i]["covered"] += b
-        res[i]["total"] += a + b
+    for i in range(3, length, 2):
+        a = int(arr[i])
+        b = int(arr[i+1])
+        res[j]["covered"] += b
+        res[j]["total"] += a + b
+        j += 1
 
 # Print markdown table with parsed report
 
