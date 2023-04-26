@@ -26,9 +26,9 @@ public class Col { //public methods : read_array, get_type
         if(setType(data.get(0))){
             for(Object o : data){
                 if(checkType(o)){
-                    this.elems.set(i, o);
+                    this.elems.add(i, o);
                 } else {
-                    this.elems.set(i, null); //sets null value if an element is of the wrong type
+                    this.elems.add(i, null); //sets null value if an element is of the wrong type
                 }
                 i = i + 1;
             }
@@ -79,8 +79,12 @@ public class Col { //public methods : read_array, get_type
         return this.type;
     }
 
-    public Object get_elem(int i){
+    public Object getElem(int i){
         return this.elems.get(i);
+    }
+
+    public String getLabel(){
+        return this.label;
     }
 
 
@@ -92,7 +96,7 @@ public class Col { //public methods : read_array, get_type
         if(this.type == dataType.DOUBLE || this.type == dataType.INT || this.type == dataType.FLOAT){
             for (Object elem : this.elems) {
                 if(elem != null) {
-                    total = total + (double) elem;
+                    total = total + Double.parseDouble(String.valueOf(elem));
                 } //else + 0 i.e. do nothing
             }
             return total / elems.size(); // size can't be 0 by design
@@ -104,8 +108,8 @@ public class Col { //public methods : read_array, get_type
         double max = Double.NEGATIVE_INFINITY;
         if(this.type == dataType.DOUBLE || this.type == dataType.INT || this.type == dataType.FLOAT){
             for (Object elem : this.elems) {
-                if(elem != null && (double) elem > max) {
-                    max = (double) elem;
+                if(elem != null && Double.parseDouble(String.valueOf(elem)) > max) {
+                    max = Double.parseDouble(String.valueOf(elem));
                 }
             }
             return max;
@@ -117,8 +121,8 @@ public class Col { //public methods : read_array, get_type
         double min = Double.POSITIVE_INFINITY;
         if(this.type == dataType.DOUBLE || this.type == dataType.INT || this.type == dataType.FLOAT){
             for (Object elem : this.elems) {
-                if(elem != null && (double) elem < min) {
-                    min = (double) elem;
+                if(elem != null && Double.parseDouble(String.valueOf(elem)) < min) {
+                    min = Double.parseDouble(String.valueOf(elem));
                 }
             }
             return min;
@@ -131,7 +135,7 @@ public class Col { //public methods : read_array, get_type
         if(this.type == dataType.DOUBLE || this.type == dataType.INT || this.type == dataType.FLOAT){
             for (Object elem : this.elems) {
                 if(elem != null ) {
-                    tot = tot + (double) elem;
+                    tot = tot + Double.parseDouble(String.valueOf(elem));
                 }
             }
             return tot;
