@@ -49,6 +49,16 @@ public class ColTest {
     }
 
     @Test
+    public void testGetLabel() {
+        // Test that getType method returns the correct data type
+        String label = "test";
+        ArrayList<Object> data = new ArrayList<>();
+        data.add(1);
+        Col col = new Col(label, data);
+        assertEquals("test", col.getLabel());
+    }
+
+    @Test
     public void testGetElem() {
         // Test that get_elem method returns the correct element at a given index
         String label = "test";
