@@ -1,0 +1,24 @@
+name: 'pr-comment'
+description: 'Publishes badges and coverage as a PR comment'
+
+inputs:
+  path:
+    description: 'Path to the coverage report md file'
+    required: false
+    default: 'coverage-report.md'
+
+runs:
+  using: "composite"
+  steps:
+    - name: generate pr_comment.md
+      run: |
+        echo "![CI](https://github.com/dcs-b/dataframe-devops/actions/workflows/ci.yml/badge.svg)" > pr_comment.md
+        cat coverage-report.md >> pr_comment.md
+      shell: bash
+
+    - name: Add PR comment
+      uses: marocchino/sticky-pull-request-comment@v2
+      if: github.event_name == 'pull_request'
+      with:
+        recreate: true
+        path: pr_comment.md

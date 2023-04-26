@@ -4,7 +4,11 @@ on:
   push:
     branches: [ "main", "develop" ]
   pull_request:
-    branches: [ "main", "develop" ]
+    branches: [ "develop" ]
+
+permissions:
+  pull-requests: write
+  checks: write
 
 jobs:
   build-and-test:
@@ -42,6 +46,10 @@ jobs:
       with:
         name: coverage_report
         path: target/site/jacoco/
+
+    - name: Add coverage as PR comment
+      uses: ./.github/actions/pr-comment
+      if: github.event_name == 'pull_request' && (success() || failure())
 
     - name: Publish coverage report to GitHub Pages (main branch)
       uses: JamesIves/github-pages-deploy-action@v4
