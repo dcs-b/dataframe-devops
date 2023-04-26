@@ -1,4 +1,4 @@
 | | Instructions | Branches | Lines | Complexity | Methods |
 | --- | --- | --- | --- | --- | --- |
-| Coverage | 100.0 % | 0.0 % | 0 % | 0 % | 100.0 % |
-| Passed | ✅ | ❌ | ❌ | ❌ | ✅ |
+| Coverage | 96.88 % | 3.63 % | 80.56 % | 13.43 % | 90.11 % |
+| Passed | ✅ | ❌ | ✅ | ❌ | ✅ |
