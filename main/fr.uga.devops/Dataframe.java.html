@@ -1,48 +1,178 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Dataframe.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">dataframe</a> &gt; <a href="index.source.html" class="el_package">fr.uga.devops</a> &gt; <span class="el_source">Dataframe.java</span></div><h1>Dataframe.java</h1><pre class="source lang-java linenums">package fr.uga.devops;
+import com.opencsv.CSVReader;
+import com.opencsv.exceptions.CsvValidationException;
 
-import java.io.File;
+import java.io.*;
 import java.util.ArrayList;
 
 public class Dataframe {
     private ArrayList&lt;Col&gt; cols;
-    private int numCol;
+    private String fileName;
 
-<span class="fc" id="L10">    public Dataframe() {</span>
 
-<span class="fc" id="L12">    }</span>
+<span class="fc" id="L13">    public Dataframe(String filename) { //if we want our dataframe from a csv file</span>
+<span class="fc" id="L14">        this.cols = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L15">        this.fileName = filename;</span>
+<span class="fc bfc" id="L16" title="All 2 branches covered.">        if(isCSVFile()){</span>
+<span class="fc" id="L17">            readCsv();</span>
+        } else {
+<span class="fc" id="L19">            throw new RuntimeException(&quot;invalid file provided.&quot;);</span>
+        }
+<span class="fc" id="L21">    }</span>
 
-    public void read_csv(File f){
+<span class="fc" id="L23">    public Dataframe() { // if we want to manually add every column</span>
+<span class="fc" id="L24">        this.cols = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L25">    }</span>
 
-<span class="nc" id="L16">    }</span>
+    private boolean isCSVFile() { //checks if the provided file is a .csv // returns boolean
+<span class="fc" id="L28">        String extension = &quot;&quot;;</span>
 
-    public void print(){
+<span class="fc" id="L30">        int i = fileName.lastIndexOf('.');</span>
+<span class="fc bfc" id="L31" title="All 2 branches covered.">        if (i &gt; 0) {</span>
+<span class="fc" id="L32">            extension = fileName.substring(i + 1);</span>
+        }
 
-<span class="nc" id="L20">    }</span>
+<span class="fc" id="L35">        return extension.equalsIgnoreCase(&quot;csv&quot;);</span>
+    }
 
+    private void readCsv(){
+<span class="fc" id="L39">        InputStream in = Dataframe.class.getClassLoader().getResourceAsStream(fileName);</span>
+<span class="pc bpc" id="L40" title="1 of 2 branches missed.">        if (in == null) {</span>
+<span class="nc" id="L41">            throw new RuntimeException(&quot;Invalid file.&quot;);</span>
+        }
+
+        boolean first;
+<span class="fc" id="L45">        String label = &quot;&quot;;</span>
+<span class="fc" id="L46">        try (CSVReader reader = new CSVReader(new InputStreamReader(in))) {</span>
+            String[] line;
+<span class="fc bfc" id="L48" title="All 2 branches covered.">            while ((line = reader.readNext()) != null) {</span>
+<span class="fc" id="L49">                first = true;</span>
+<span class="fc" id="L50">                ArrayList&lt;Object&gt; data = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L51" title="All 2 branches covered.">                for (String element : line) {</span>
+<span class="fc bfc" id="L52" title="All 2 branches covered.">                    if(first){</span>
+<span class="fc" id="L53">                        label = element;</span>
+<span class="fc" id="L54">                        first = false;</span>
+                    } else {
+<span class="fc" id="L56">                        data.add(element);</span>
+                    }
+                }
+<span class="fc" id="L59">                Col col = new Col(label, data);</span>
+<span class="fc" id="L60">                this.cols.add(col);</span>
+<span class="fc" id="L61">            }</span>
+<span class="nc" id="L62">        } catch (IOException | CsvValidationException e) {</span>
+<span class="nc" id="L63">            e.printStackTrace();</span>
+<span class="fc" id="L64">        }</span>
+<span class="fc" id="L65">    }</span>
+
+    //print the rows from start index to end index
+    private void print(int start, int end) {
+<span class="nc" id="L69">        int index = start;</span>
+<span class="nc bnc" id="L70" title="All 2 branches missed.">        for (Col col : this.cols) {</span>
+<span class="nc" id="L71">            System.out.printf(&quot;%-15s&quot;, col.getLabel());</span>
+<span class="nc" id="L72">        }</span>
+<span class="nc" id="L73">        System.out.printf(&quot;\n&quot;);</span>
+<span class="nc bnc" id="L74" title="All 2 branches missed.">        while(index &lt;= end){</span>
+<span class="nc bnc" id="L75" title="All 2 branches missed.">            for (Col col : this.cols) {</span>
+<span class="nc bnc" id="L76" title="All 2 branches missed.">                if (index &lt; col.getSize()) {</span>
+<span class="nc" id="L77">                    System.out.printf(&quot;%-15s&quot;, col.getElem(index));</span>
+                } else {
+<span class="nc" id="L79">                    System.out.printf(&quot;%-15s&quot;, &quot; &quot;);</span>
+                }
+<span class="nc" id="L81">            }</span>
+<span class="nc" id="L82">            index += 1;</span>
+<span class="nc" id="L83">            System.out.printf(&quot;\n&quot;);</span>
+        }
+<span class="nc" id="L85">    }</span>
+
+    //print the first 7 rows
     public void head(){
+<span class="nc" id="L89">        int max = getBiggestSize();</span>
+<span class="nc bnc" id="L90" title="All 2 branches missed.">        if(max &gt; 6){</span>
+<span class="nc" id="L91">            max = 6;</span>
+        }
+<span class="nc" id="L93">        print(0,max);</span>
+<span class="nc" id="L94">    }</span>
 
-<span class="nc" id="L24">    }</span>
-
+    //print the last 7 rows
     public void tail(){
+<span class="nc" id="L98">        int max = getBiggestSize();</span>
+<span class="nc bnc" id="L99" title="All 2 branches missed.">        if(max &lt; 6){</span>
+<span class="nc" id="L100">            print(0,max);</span>
+<span class="nc" id="L101">            return;</span>
+        }
+<span class="nc" id="L103">        print(max-6, max);</span>
+<span class="nc" id="L104">    }</span>
 
-<span class="nc" id="L28">    }</span>
+    //print all the rows
+    public void show(){
+<span class="nc" id="L108">        print(0,getBiggestSize());</span>
+<span class="nc" id="L109">    }</span>
 
-    public void add_column(){
-
-<span class="nc" id="L32">    }</span>
-
-    public void remove_column(){
-
-<span class="nc" id="L36">    }</span>
-
-    public Dataframe extract_rows(){
-<span class="nc" id="L39">        return this;</span>
+    private int getBiggestSize(){
+<span class="nc" id="L112">        int max = 0;</span>
+<span class="nc bnc" id="L113" title="All 2 branches missed.">        for (Col col : this.cols) {</span>
+<span class="nc bnc" id="L114" title="All 2 branches missed.">            if(col.getSize() &gt; max){</span>
+<span class="nc" id="L115">                max = col.getSize();</span>
+            }
+<span class="nc" id="L117">        }</span>
+<span class="nc" id="L118">        return max;</span>
     }
 
-    public Dataframe extract_columns(){
-<span class="nc" id="L43">        return this;</span>
+    public void addColumn(String label, ArrayList&lt;Object&gt; data ){
+<span class="nc" id="L122">        Col col = new Col(label, data);</span>
+<span class="nc" id="L123">        this.cols.add(col);</span>
+<span class="nc" id="L124">    }</span>
+
+    public void removeColumn(String label){
+<span class="fc bfc" id="L127" title="All 2 branches covered.">        for(Col col:cols ){</span>
+<span class="pc bpc" id="L128" title="1 of 2 branches missed.">            if(col.getLabel().equalsIgnoreCase(label)){</span>
+<span class="fc" id="L129">                cols.remove(col);</span>
+<span class="fc" id="L130">                return;</span>
+            }
+<span class="nc" id="L132">        }</span>
+<span class="fc" id="L133">    }</span>
+
+    public Dataframe extractRows(ArrayList&lt;Integer&gt; indexes){
+<span class="nc" id="L136">        Dataframe df = new Dataframe();</span>
+<span class="nc bnc" id="L137" title="All 2 branches missed.">        for(Col col: this.cols){</span>
+<span class="nc" id="L138">            ArrayList&lt;Object&gt; data = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L139">            String label = col.getLabel();</span>
+<span class="nc bnc" id="L140" title="All 2 branches missed.">            for(Integer i: indexes){</span>
+<span class="nc bnc" id="L141" title="All 2 branches missed.">                if(i &lt; col.getSize()){</span>
+<span class="nc" id="L142">                data.add(col.getElem(i));</span>
+                }
+<span class="nc" id="L144">            }</span>
+<span class="nc" id="L145">            df.addColumn(label, data);</span>
+<span class="nc" id="L146">        }</span>
+<span class="nc" id="L147">        return df;</span>
     }
 
+
+    //user must provide an arraylist containing
+    //the indexes of the columns they want to extract
+
+    public Dataframe extractColumns(ArrayList&lt;Integer&gt; indexes){
+<span class="nc" id="L155">        Dataframe df = new Dataframe();</span>
+<span class="nc bnc" id="L156" title="All 2 branches missed.">        for(Integer i : indexes){</span>
+<span class="nc bnc" id="L157" title="All 2 branches missed.">            if(i &lt; this.cols.size()) {</span>
+<span class="nc" id="L158">                df.duplicateCol(this.getColumn(i));</span>
+            }
+<span class="nc" id="L160">        }</span>
+<span class="nc" id="L161">        return df;</span>
+    }
+
+    public Col getColumn(int index){
+<span class="nc" id="L165">        return cols.get(index);</span>
+    }
+
+    private void duplicateCol(Col col){
+<span class="nc" id="L169">        this.cols.add(col);</span>
+<span class="nc" id="L170">    }</span>
+
+    public int getSize(){
+<span class="nc" id="L173">        return this.cols.size();</span>
+    }
 
 }
+
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.9.202303310957</span></div></body></html>
