@@ -83,8 +83,8 @@ public class Dataframe {
     //print the first 7 rows
     public void head(){
         int max = getBiggestSize();
-        if(max > 7){
-            max = 7;
+        if(max > 6){
+            max = 6;
         }
         print(0,max);
     }
@@ -92,11 +92,11 @@ public class Dataframe {
     //print the last 7 rows
     public void tail(){
         int max = getBiggestSize();
-        if(max < 7){
+        if(max < 6){
             print(0,max);
             return;
         }
-        print(max-7, max);
+        print(max-6, max);
     }
 
     //print all the rows
