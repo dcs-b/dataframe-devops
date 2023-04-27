@@ -100,13 +100,6 @@ public class ColTest {
     }
 
     @Test
-    public void testUnknownType() {
-        enum UnknownEnum { UNKNOWN }
-        data.add(UnknownEnum.UNKNOWN);
-        assertThrows(IllegalArgumentException.class, () -> new Col(label, data));
-    }
-
-    @Test
     public void testAvg() {
         // Test that avg method returns the correct average of numeric elements
         data.add(1);

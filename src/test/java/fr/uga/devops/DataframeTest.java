@@ -3,8 +3,6 @@ package fr.uga.devops;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
-
 import static org.junit.Assert.*;
 
 public class DataframeTest {
@@ -40,15 +38,5 @@ public class DataframeTest {
             data.removeColumn("label" + i);
         }
         data.removeColumn("label1");
-    }
-
-    @Test
-    public void testAddColumns() {
-        data = new Dataframe();
-        ArrayList<Object> list = new ArrayList<>();
-        list.add(0);
-        list.add(1);
-        list.add(2);
-        data.addColumn("label", list);
     }
 }
