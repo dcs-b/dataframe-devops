@@ -39,16 +39,29 @@ public class Col { //public methods : read_array, get_type
 
 
     private Boolean setType(Object o){
-
-        if (o instanceof Integer) {
+        try {
+            int i = Integer.parseInt((String) o);
             this.type = dataType.INT;
-        } else if (o instanceof String) {
-            this.type = dataType.STRING;
-        } else if (o instanceof Double) {
-            this.type = dataType.DOUBLE;
-        }else if (o instanceof Float) {
+            return true;
+        } catch (NumberFormatException ignored) {
+        }
+
+        try {
+            float f = Float.parseFloat((String) o);
             this.type = dataType.FLOAT;
-        }else if (o instanceof Boolean) {
+            return true;
+        } catch (NumberFormatException ignored) {
+        }
+
+        try {
+            double d = Double.parseDouble((String) o);
+            this.type = dataType.DOUBLE;
+            return true;
+        } catch (NumberFormatException ignored) {
+        }
+        if (o instanceof String) {
+            this.type = dataType.STRING;
+        } else if (o instanceof Boolean) {
             this.type = dataType.BOOL;
         }
         else {
@@ -60,18 +73,37 @@ public class Col { //public methods : read_array, get_type
 
     private Boolean checkType(Object o){
         if(this.type == dataType.INT){
-            return o instanceof Integer;
+            try {
+                int i = Integer.parseInt((String) o);
+                this.type = dataType.INT;
+                return true;
+            } catch (NumberFormatException ignored) {
+                return false;
+            }
+
         } else if(this.type == dataType.STRING){
             return o instanceof String;
         } else if(this.type == dataType.DOUBLE){
-            return o instanceof Double;
+            try {
+                double d = Double.parseDouble((String) o);
+                this.type = dataType.DOUBLE;
+                return true;
+            } catch (NumberFormatException ignored) {
+                return false;
+            }
         } else if(this.type == dataType.FLOAT){
-            return o instanceof Float;
+            try {
+                float f = Float.parseFloat((String) o);
+                this.type = dataType.FLOAT;
+                return true;
+            } catch (NumberFormatException ignored) {
+                return false;
+            }
         } else if(this.type == dataType.BOOL){
             return o instanceof Boolean;
         }
         else {
-            return null;
+            return false;
         }
     }
 
@@ -100,7 +132,7 @@ public class Col { //public methods : read_array, get_type
         if(this.type == dataType.DOUBLE || this.type == dataType.INT || this.type == dataType.FLOAT){
             for (Object elem : this.elems) {
                 if(elem != null) {
-                    total = total + Double.parseDouble(String.valueOf(elem));
+                    total = total + Double.parseDouble((String) elem);
                 } //else + 0 i.e. do nothing
             }
             return total / elems.size(); // size can't be 0 by design
@@ -112,8 +144,8 @@ public class Col { //public methods : read_array, get_type
         double max = Double.NEGATIVE_INFINITY;
         if(this.type == dataType.DOUBLE || this.type == dataType.INT || this.type == dataType.FLOAT){
             for (Object elem : this.elems) {
-                if(elem != null && Double.parseDouble(String.valueOf(elem)) > max) {
-                    max = Double.parseDouble(String.valueOf(elem));
+                if(elem != null && Double.parseDouble((String) elem) > max) {
+                    max = Double.parseDouble((String) elem);
                 }
             }
             return max;
@@ -125,8 +157,8 @@ public class Col { //public methods : read_array, get_type
         double min = Double.POSITIVE_INFINITY;
         if(this.type == dataType.DOUBLE || this.type == dataType.INT || this.type == dataType.FLOAT){
             for (Object elem : this.elems) {
-                if(elem != null && Double.parseDouble(String.valueOf(elem)) < min) {
-                    min = Double.parseDouble(String.valueOf(elem));
+                if(elem != null && Double.parseDouble((String) elem) < min) {
+                    min = Double.parseDouble((String) elem);
                 }
             }
             return min;
@@ -139,7 +171,7 @@ public class Col { //public methods : read_array, get_type
         if(this.type == dataType.DOUBLE || this.type == dataType.INT || this.type == dataType.FLOAT){
             for (Object elem : this.elems) {
                 if(elem != null ) {
-                    tot = tot + Double.parseDouble(String.valueOf(elem));
+                    tot = tot + Double.parseDouble((String) elem);
                 }
             }
             return tot;
