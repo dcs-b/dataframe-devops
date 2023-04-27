@@ -86,6 +86,9 @@
                                     </limits>
                                 </rule>
                             </rules>
+                            <excludes>
+                                <exclude>fr/uga/devops/Main.class</exclude>
+                            </excludes>
                         </configuration>
                     </execution>
                 </executions>
