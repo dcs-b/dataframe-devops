@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Main {
     public static void main(String[] args){
         System.out.println("Creating dataframe from csv file: ");
-        String csvFile = "resources/example.csv"; // ../../../../../resources
+        String csvFile = "example.csv"; // ../../../../../resources
         Dataframe df = new Dataframe(csvFile);
         df.show();
 
