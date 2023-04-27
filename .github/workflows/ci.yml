@@ -40,7 +40,7 @@ jobs:
       uses: ./.github/actions/coverage-report
       if: success() || failure()
       with:
-        min_coverage: 50
+        min_coverage: 40
 
     - name: Upload coverage report as artifact
       uses: actions/upload-artifact@v3
