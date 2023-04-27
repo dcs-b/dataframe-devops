@@ -33,7 +33,7 @@ public class Col { //public methods : read_array, get_type
                 i = i + 1;
             }
         }else {
-            System.out.println("Unrecognized data type - Exiting.");
+            throw new IllegalArgumentException("Unrecognized data type - Exiting.");
         }
     }
 
@@ -120,6 +120,7 @@ public class Col { //public methods : read_array, get_type
         return this.elems.size();
     }
 
+
     // in these methods we cast Objects doubles. this cast is safe because we check the dataType beforehand and
     // double is stored on 64bits, so no loss of precision takes place.
 
@@ -133,7 +134,7 @@ public class Col { //public methods : read_array, get_type
             }
             return total / elems.size(); // size can't be 0 by design
         }
-        return 0; // avg for non maths values is 0
+        throw new RuntimeException("Operation not supported for this type");
     }
 
     public double max(){
@@ -146,7 +147,7 @@ public class Col { //public methods : read_array, get_type
             }
             return max;
         }
-        return 0; // max for non maths values is 0
+        throw new RuntimeException("Operation not supported for this type");
     }
 
     public double min(){
@@ -159,7 +160,7 @@ public class Col { //public methods : read_array, get_type
             }
             return min;
         }
-        return 0; // min for non maths values is 0
+        throw new RuntimeException("Operation not supported for this type");
     }
 
     public double total(){
@@ -172,6 +173,6 @@ public class Col { //public methods : read_array, get_type
             }
             return tot;
         }
-        return 0; // min for non maths values is 0
+        throw new RuntimeException("Operation not supported for this type");
     }
 }

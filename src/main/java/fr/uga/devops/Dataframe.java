@@ -2,21 +2,20 @@ package fr.uga.devops;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 
 public class Dataframe {
     private ArrayList<Col> cols;
+    private String fileName;
 
 
     public Dataframe(String filename) { //if we want our dataframe from a csv file
         this.cols = new ArrayList<>();
-        File f = new File(filename);
-        if(isCSVFile(filename)){
-            readCsv(f);
-        }else {
+        this.fileName = filename;
+        if(isCSVFile()){
+            readCsv();
+        } else {
             throw new RuntimeException("invalid file provided.");
         }
     }
@@ -25,7 +24,7 @@ public class Dataframe {
         this.cols = new ArrayList<>();
     }
 
-    private boolean isCSVFile(String fileName) { //checks if the provided file is a .csv // returns boolean
+    private boolean isCSVFile() { //checks if the provided file is a .csv // returns boolean
         String extension = "";
 
         int i = fileName.lastIndexOf('.');
@@ -36,10 +35,15 @@ public class Dataframe {
         return extension.equalsIgnoreCase("csv");
     }
 
-    private void readCsv(File f){
+    private void readCsv(){
+        InputStream in = Dataframe.class.getClassLoader().getResourceAsStream(fileName);
+        if (in == null) {
+            throw new RuntimeException("Invalid file.");
+        }
+
         boolean first;
         String label = "";
-        try (CSVReader reader = new CSVReader(new FileReader(f))) {
+        try (CSVReader reader = new CSVReader(new InputStreamReader(in))) {
             String[] line;
             while ((line = reader.readNext()) != null) {
                 first = true;
